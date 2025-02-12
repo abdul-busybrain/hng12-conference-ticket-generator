@@ -1,45 +1,116 @@
-"use client";
-
-import React from "react";
-import { Button } from "antd";
+// components/TicketReady.tsx
+import React, { useRef } from "react";
 import html2canvas from "html2canvas";
+import { Download } from "lucide-react";
+import Image from "next/image";
 
 interface TicketReadyProps {
-  ticketInfo: { type: string; quantity: number };
-  attendeeInfo: { photoUrl: string; name: string; email: string };
+  ticketData: {
+    ticketType: string;
+    quantity: number;
+    name: string;
+    email: string;
+    photo: string;
+    about: string;
+  };
 }
 
-const TicketReady: React.FC<TicketReadyProps> = ({
-  ticketInfo = { type: "", quantity: 0 },
-  attendeeInfo = { photoUrl: "", name: "", email: "" },
-}) => {
-  const downloadTicket = () => {
-    const ticket = document.getElementById("ticket");
-    if (ticket) {
-      html2canvas(ticket).then((canvas) => {
-        const link = document.createElement("a");
-        link.download = "ticket.png";
-        link.href = canvas.toDataURL();
-        link.click();
+const TicketReady: React.FC<TicketReadyProps> = ({ ticketData }) => {
+  const ticketRef = useRef<HTMLDivElement>(null);
+
+  const downloadTicket = async () => {
+    if (!ticketRef.current) return;
+
+    try {
+      const canvas = await html2canvas(ticketRef.current, {
+        useCORS: true, // Important if you're using images from different domains
       });
+      const dataURL = canvas.toDataURL("image/png");
+
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "conference-ticket.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error generating/downloading image:", error);
     }
   };
 
-  return (
-    <section className="border border-[#197686] rounded-2xl p-7">
-      <div>
-        <h3>Ticket information</h3>
-        <p>Type: {ticketInfo.type}</p>
-        <p>Quantity: {ticketInfo.quantity}</p>
+  // Simulate a barcode (replace with a real barcode generator if needed)
+  const barcode = "234567 890126";
 
-        <h3>Attendee information</h3>
-        <p>Name: {attendeeInfo.name}</p>
-        <p>Email: {attendeeInfo.email}</p>
-        <p>Photo: {attendeeInfo.photoUrl}</p>
+  return (
+    <div className="p-4 rounded-lg shadow-md bg-secondary text-text-light">
+      <h2 className="text-lg font-semibold mb-4">Your Ticket is Booked!</h2>
+      <p className="mb-2">Check your email for a copy or you can download:</p>
+
+      <div
+        ref={ticketRef}
+        className="border border-gray-300 rounded-lg p-4 relative"
+      >
+        <div className="text-center">
+          <h3 className="text-xl font-bold">Techember Fest &quot;25</h3>
+          <p className="text-sm text-gray-600">
+            <span className="font-semibold">34 Rumens road, Ikoyi, Lagos</span>
+            <br />
+            March 15, 2025 | 7:00 PM
+          </p>
+        </div>
+
+        <div className="flex justify-center mt-4">
+          {ticketData.photo && (
+            <Image
+              src={ticketData.photo}
+              alt="Attendee"
+              className="rounded-full w-24 h-24 object-cover"
+            />
+          )}
+        </div>
+
+        <div className="mt-4 text-center">
+          <p>
+            <span className="font-semibold">Name:</span> {ticketData.name}
+          </p>
+          <p>
+            <span className="font-semibold">Email:</span> {ticketData.email}
+          </p>
+          <p>
+            <span className="font-semibold">Ticket Type:</span>{" "}
+            {ticketData.ticketType}
+          </p>
+          <p>
+            <span className="font-semibold">Ticket for:</span>{" "}
+            {ticketData.quantity}
+          </p>
+          <p>
+            <span className="font-semibold">About:</span> {ticketData.about}
+          </p>
+        </div>
+
+        {/* Barcode */}
+        <div className="mt-6 text-center">
+          <div className="flex justify-center">
+            <svg width="200" height="50">
+              {/* Placeholder for barcode - replace with a real barcode generator */}
+              <text x="10" y="30" fontSize="20" fill="black">
+                {barcode}
+              </text>
+            </svg>
+          </div>
+          <p className="text-xs text-gray-600">234567 890126</p>
+        </div>
       </div>
 
-      <Button onClick={downloadTicket}>download ticket</Button>
-    </section>
+      <button
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 flex items-center space-x-2"
+        onClick={downloadTicket}
+      >
+        <Download className="h-5 w-5" />
+        <span>Download Ticket</span>
+      </button>
+    </div>
   );
 };
 

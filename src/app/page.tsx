@@ -1,23 +1,50 @@
 "use client";
 
-import React from "react";
-import Header from "./components/Header";
-import SelectTicket from "./pages/SelectTicket";
+import React, { useState } from "react";
+import ProgressBar from "./components/ProgressBar";
+import TicketSelection from "./pages/TicketSelection";
+import AttendeeDetails from "./pages/AttendeeDetails";
+import TicketReady from "./pages/TicketReady";
 
-interface HomeProps {
-  onSelect: (type: string, quantity: number) => void;
-}
+const Home: React.FC = () => {
+  const [step, setStep] = useState<number>(1);
+  const [ticketType, setTicketType] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [attendeeData, setAttendeeData] = useState<{
+    name: string;
+    email: string;
+    photo: string;
+    about: string;
+  }>({ name: "", email: "", photo: "", about: "" });
 
-const Home: React.FC<HomeProps> = () => {
-  const handleSelect = (type: string, quantity: number) => {
-    console.log(type, quantity);
+  const handleTicketSelectionNext = (type: string, qty: number) => {
+    setTicketType(type);
+    setQuantity(qty);
+    setStep(2);
+  };
+
+  const handleAttendeeDetailsNext = (data: {
+    name: string;
+    email: string;
+    photo: string;
+    about: string;
+  }) => {
+    setAttendeeData(data);
+    setStep(3);
   };
 
   return (
-    <>
-      <Header />
-      <SelectTicket onSelect={handleSelect} />
-    </>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-primary text-text-light">
+      {" "}
+      {/* Dark Background, light text*/}
+      <h1 className="text-2xl font-bold mb-4">Conference Ticket Generator</h1>
+      <ProgressBar step={step} />
+      {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
+      {step === 2 && <AttendeeDetails onNext={handleAttendeeDetailsNext} />}
+      {step === 3 && (
+        <TicketReady ticketData={{ ticketType, quantity, ...attendeeData }} />
+      )}
+    </div>
   );
 };
 
