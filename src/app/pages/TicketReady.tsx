@@ -1,5 +1,6 @@
+"use client";
+
 import React from "react";
-import Progression from "../components/Progression";
 import { Button } from "antd";
 import html2canvas from "html2canvas";
 
@@ -9,8 +10,8 @@ interface TicketReadyProps {
 }
 
 const TicketReady: React.FC<TicketReadyProps> = ({
-  ticketInfo,
-  attendeeInfo,
+  ticketInfo = { type: "", quantity: 0 },
+  attendeeInfo = { photoUrl: "", name: "", email: "" },
 }) => {
   const downloadTicket = () => {
     const ticket = document.getElementById("ticket");
@@ -26,7 +27,6 @@ const TicketReady: React.FC<TicketReadyProps> = ({
 
   return (
     <section className="border border-[#197686] rounded-2xl p-7">
-      <Progression />
       <div>
         <h3>Ticket information</h3>
         <p>Type: {ticketInfo.type}</p>

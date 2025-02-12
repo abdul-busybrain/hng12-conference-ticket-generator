@@ -1,38 +1,49 @@
-import { useEffect, useState } from "react";
-import Title from "./Title";
-import ProgressIndicator from "./ProgressIndicator";
-import ProgressBar from "./ProgressBar";
+"use client";
 
-const Progression: React.FC = () => {
+import { useEffect, useState } from "react";
+import { Progress } from "antd";
+
+interface ProgressionProps {
+  currentStep: number;
+}
+
+const Progression: React.FC<ProgressionProps> = ({ currentStep }) => {
   const [progress, setProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState(1);
   const titles = ["Ticket Selection", "Attendee Details", "Ready"];
 
   useEffect(() => {
+    const targetProgress = ((currentStep - 1) / 2) * 100;
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        if (prev >= targetProgress) {
           clearInterval(interval);
-          return 100;
+          return targetProgress;
         }
-        return prev + 33.333;
+        return prev + 1;
       });
-      setCurrentStep((prev) => {
-        if (prev < 3) return prev + 1;
-        return prev;
-      });
-    }, 1000);
+    }, 20);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentStep]);
+
   return (
     <>
       <div className="flex justify-between">
-        <Title title={titles[currentStep - 1]} />
-        <ProgressIndicator currentStep={currentStep} />
+        <h2 className="text-xl font-bold mt-4">{titles[currentStep - 1]}</h2>
+        <div className="mt-2">
+          <span className="text-gray-600">{currentStep}/3</span>
+        </div>
       </div>
 
-      <ProgressBar progress={progress} />
+      <div className="w-full">
+        <Progress
+          percent={progress}
+          showInfo={false}
+          strokeColor={"#197686"}
+          strokeWidth={3}
+          className="transition-all duration-500"
+        />
+      </div>
     </>
   );
 };

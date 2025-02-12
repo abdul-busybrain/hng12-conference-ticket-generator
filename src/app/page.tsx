@@ -1,11 +1,24 @@
-import Header from "./components/Header";
-import TicketReady from "./pages/TicketReady";
+"use client";
 
-export default function Home() {
+import React from "react";
+import Header from "./components/Header";
+import SelectTicket from "./pages/SelectTicket";
+
+interface HomeProps {
+  onSelect: (type: string, quantity: number) => void;
+}
+
+const Home: React.FC<HomeProps> = () => {
+  const handleSelect = (type: string, quantity: number) => {
+    console.log(type, quantity);
+  };
+
   return (
     <>
       <Header />
-      <TicketReady />
+      <SelectTicket onSelect={handleSelect} />
     </>
   );
-}
+};
+
+export default Home;

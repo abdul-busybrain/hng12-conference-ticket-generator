@@ -1,6 +1,6 @@
 "use client";
+
 import React from "react";
-import Progression from "../components/Progression";
 import { Button, Select } from "antd";
 
 const { Option } = Select;
@@ -26,7 +26,6 @@ const SelectTicket: React.FC<SelectTicketProps> = ({ onSelect }) => {
   return (
     <section className="border border-[#197686] rounded-2xl p-7">
       <div>
-        <Progression />
         <div className="text-center p-16">
           <h1>Techember Fest &quot;25</h1>
           <p>
