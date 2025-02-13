@@ -5,6 +5,7 @@ import ProgressBar from "./components/ProgressBar";
 import TicketSelection from "./pages/TicketSelection";
 import AttendeeDetails from "./pages/AttendeeDetails";
 import TicketReady from "./pages/TicketReady";
+import Header from "./components/Header";
 
 const Home: React.FC = () => {
   const [step, setStep] = useState<number>(1);
@@ -34,17 +35,17 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-primary text-text-light">
-      {" "}
-      {/* Dark Background, light text*/}
-      <h1 className="text-2xl font-bold mb-4">Conference Ticket Generator</h1>
-      <ProgressBar step={step} />
-      {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
-      {step === 2 && <AttendeeDetails onNext={handleAttendeeDetailsNext} />}
-      {step === 3 && (
-        <TicketReady ticketData={{ ticketType, quantity, ...attendeeData }} />
-      )}
-    </div>
+    <>
+      <Header />
+      <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-primary text-text-light">
+        <ProgressBar step={step} />
+        {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
+        {step === 2 && <AttendeeDetails onNext={handleAttendeeDetailsNext} />}
+        {step === 3 && (
+          <TicketReady ticketData={{ ticketType, quantity, ...attendeeData }} />
+        )}
+      </div>
+    </>
   );
 };
 

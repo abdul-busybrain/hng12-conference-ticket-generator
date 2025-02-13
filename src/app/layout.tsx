@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Montserrat, Roboto, Road_Rage } from "next/font/google";
 import "./globals.css";
