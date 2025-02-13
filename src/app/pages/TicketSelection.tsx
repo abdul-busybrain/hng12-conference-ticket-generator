@@ -1,5 +1,9 @@
-import { Button } from "antd";
+'use client'
+
+import { Button, Select, Typography, Form } from "antd";
 import React, { useState } from "react";
+
+const { Title, Text, Paragraph } = Typography;
 
 interface TicketSelectionProps {
   onNext: (ticketType: string, quantity: number) => void;
@@ -13,51 +17,61 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
     onNext(ticketType, quantity);
   };
 
+  // Create array of numbers 1-10 for quantity options
+  const quantityOptions = Array.from({ length: 10 }, (_, i) => ({
+    value: i + 1,
+    label: `${i + 1} ticket${i + 1 > 1 ? 's' : ''}`
+  }));
+
   return (
     <div className="p-4 rounded-lg shadow-md bg-secondary text-text-light">
-      <h2 className="text-lg font-semibold mb-4">Techember Fest &quot;25</h2>
-      <p className="mb-4">
+      <Title level={2}>Techember Fest &quot;25</Title>
+      <Paragraph>
         Join us for an unforgettable experience at <br /> Hawan Nassarawa!
         Secure your spot now. <br />
         Kofar Nassarawa || March 15, 2025 || 7:00 PM
-      </p>
-      <div className="mb-4">
-        <label htmlFor="ticketType" className="block text-sm font-bold mb-2">
-          Select Ticket Type
-        </label>
-        <select
-          id="ticketType"
-          className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-800 text-white"
-          value={ticketType}
-          onChange={(e) => setTicketType(e.target.value)}
+      </Paragraph>
+      
+      <Form layout="vertical">
+        <Form.Item 
+          label={<Text strong>Select Ticket Type</Text>}
+          className="mb-4"
         >
-          <option value="regular">Regular Access (Free)</option>
-          <option value="vip">VIP Access ($50)</option>
-          <option value="vvip">VVIP Access ($150)</option>
-        </select>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="quantity" className="block text-sm font-bold mb-2">
-          Number of Tickets
-        </label>
-        <input
-          type="number"
-          id="quantity"
-          className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-800 text-white"
-          value={quantity}
-          onChange={(e) => setQuantity(parseInt(e.target.value))}
-          min="1"
-        />
-      </div>
-      <div className="flex justify-between">
-        <Button ghost>Cancel</Button>
-        <Button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={handleNext}
+          <Select
+            value={ticketType}
+            onChange={(value) => setTicketType(value)}
+            className="w-full"
+          >
+            <Select.Option value="regular">Regular Access (Free)</Select.Option>
+            <Select.Option value="vip">VIP Access ($50)</Select.Option>
+            <Select.Option value="vvip">VVIP Access ($150)</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item 
+          label={<Text strong>Number of Tickets</Text>}
+          className="mb-4"
         >
-          Next
-        </Button>
-      </div>
+          <Select
+            value={quantity}
+            onChange={(value) => setQuantity(value)}
+            className="w-full"
+          >
+            {quantityOptions.map((option) => (
+              <Select.Option key={option.value} value={option.value}>
+                {option.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <div className="flex justify-between">
+          <Button ghost>Cancel</Button>
+          <Button type="primary" onClick={handleNext}>
+            Next
+          </Button>
+        </div>
+      </Form>
     </div>
   );
 };
