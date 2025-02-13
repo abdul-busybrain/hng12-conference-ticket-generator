@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import Header from "./components/Header";
 import ProgressBar from "./components/ProgressBar";
 import TicketSelection from "./pages/TicketSelection";
 import AttendeeDetails from "./pages/AttendeeDetails";
 import TicketReady from "./pages/TicketReady";
-import Header from "./components/Header";
 
-const Home: React.FC = () => {
-  const [step, setStep] = useState<number>(1);
-  const [ticketType, setTicketType] = useState<string>("");
-  const [quantity, setQuantity] = useState<number>(1);
-  const [attendeeData, setAttendeeData] = useState<{
-    name: string;
-    email: string;
-    photo: string;
-    about: string;
-  }>({ name: "", email: "", photo: "", about: "" });
+export default function Home() {
+  const [step, setStep] = useState(1);
+  const [ticketType, setTicketType] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [attendeeData, setAttendeeData] = useState({
+    name: "",
+    email: "",
+    photo: "",
+    about: "",
+  });
 
   const handleTicketSelectionNext = (type: string, qty: number) => {
     setTicketType(type);
@@ -24,29 +24,28 @@ const Home: React.FC = () => {
     setStep(2);
   };
 
-  const handleAttendeeDetailsNext = (data: {
-    name: string;
-    email: string;
-    photo: string;
-    about: string;
-  }) => {
+  const handleAttendeeDetailsNext = (data: typeof attendeeData) => {
     setAttendeeData(data);
     setStep(3);
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-[#001a1a]">
       <Header />
-      <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-primary text-text-light">
+      <main className="container mx-auto px-4 py-8">
         <ProgressBar step={step} />
         {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
         {step === 2 && <AttendeeDetails onNext={handleAttendeeDetailsNext} />}
         {step === 3 && (
-          <TicketReady ticketData={{ ticketType, quantity, ...attendeeData }} />
+          <TicketReady
+            ticketData={{
+              ticketType,
+              quantity,
+              ...attendeeData,
+            }}
+          />
         )}
-      </div>
-    </>
+      </main>
+    </div>
   );
-};
-
-export default Home;
+}

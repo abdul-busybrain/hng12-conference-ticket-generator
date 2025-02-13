@@ -1,19 +1,23 @@
 "use client";
 
-import React, { useRef } from "react";
-import html2canvas from "html2canvas";
+import { useRef } from "react";
 import { Download } from "lucide-react";
 import Image from "next/image";
+import html2canvas from "html2canvas";
+import type React from "react"; // Added import for React
+
+interface TicketData {
+  ticketType: string;
+  quantity: number;
+  name: string;
+  email: string;
+  photo: string;
+  about: string;
+  image?: string;
+}
 
 interface TicketReadyProps {
-  ticketData: {
-    ticketType: string;
-    quantity: number;
-    name: string;
-    email: string;
-    photo: string;
-    about: string;
-  };
+  ticketData: TicketData;
 }
 
 const TicketReady: React.FC<TicketReadyProps> = ({ ticketData }) => {
@@ -24,95 +28,93 @@ const TicketReady: React.FC<TicketReadyProps> = ({ ticketData }) => {
 
     try {
       const canvas = await html2canvas(ticketRef.current, {
-        useCORS: true, // Important if you're using images from different domains
+        useCORS: true,
       });
       const dataURL = canvas.toDataURL("image/png");
-
       const link = document.createElement("a");
       link.href = dataURL;
-      link.download = "conference-ticket.png";
+      link.download = "techember-ticket.png";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error("Error generating/downloading image:", error);
+      console.error("Error generating ticket:", error);
     }
   };
 
-  // Simulate a barcode (replace with a real barcode generator if needed)
-  const barcode = "234567 890126";
-
   return (
-    <div className="p-4 rounded-lg shadow-md bg-secondary text-text-light flex flex-col items-center">
-      <h2 className="text-lg font-semibold mb-4">Your Ticket is Booked!</h2>
-      <p className="mb-2">Check your email for a copy or you can download:</p>
+    <div className="bg-[#002626] p-8 rounded-lg shadow-lg">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-white mb-2">
+          Your Ticket is Ready!
+        </h2>
+        <p className="text-gray-400 text-lg">
+          Please review your details below
+        </p>
+      </div>
 
-      <div
-        ref={ticketRef}
-        className="border border-gray-300 rounded-lg p-4 relative w-full max-w-md bg-primary" // Added max-w-md for size control and bg-primary
-      >
-        <div className="text-center mb-4">
-          <h3 className="text-xl font-bold">Techember Fest &quot;25</h3>
-          <p className="text-sm text-gray-400">
-            34 Rumens road, Ikoyi, Lagos
-            <br />
-            March 15, 2025 | 7:00 PM
-          </p>
-        </div>
-
-        {/* Attendee Photo */}
-        <div className="flex justify-center mt-4">
-          {ticketData.photo && (
+      <div className="space-y-6">
+        {(ticketData.image || ticketData.photo) && (
+          <div>
             <Image
-              src={ticketData.photo}
+              src={ticketData.image || ticketData.photo || "/placeholder.svg"}
               alt="Attendee"
-              className="rounded-full w-24 h-24 object-cover border-2 border-accent" // Added accent border
+              width={96}
+              height={96}
+              className="w-24 h-24 rounded-lg mx-auto border-2 border-[#00cccc] object-cover"
             />
-          )}
+          </div>
+        )}
+
+        <div className="space-y-2 text-left mb-6">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className="text-gray-400 text-sm">Enter your name</p>
+              <p className="text-white">{ticketData.name}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">Enter your email *</p>
+              <p className="text-white">{ticketData.email}</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-gray-400 text-sm">Ticket Type</p>
+            <p className="text-white">{ticketData.ticketType}</p>
+          </div>
+          <div>
+            <p className="text-gray-400 text-sm">Ticket for</p>
+            <p className="text-white">{ticketData.quantity}</p>
+          </div>
+          <div>
+            <p className="text-gray-400 text-sm">Special request?</p>
+            <p className="text-white">{ticketData.about || "None"}</p>
+          </div>
         </div>
 
-        {/* Attendee Details */}
-        <div className="mt-4 text-center">
-          <p>
-            <span className="font-semibold">Name:</span> {ticketData.name}
-          </p>
-          <p>
-            <span className="font-semibold">Email:</span> {ticketData.email}
-          </p>
-          <p>
-            <span className="font-semibold">Ticket Type:</span>{" "}
-            {ticketData.ticketType}
-          </p>
-          <p>
-            <span className="font-semibold">Ticket for:</span>{" "}
-            {ticketData.quantity}
-          </p>
-          <p>
-            <span className="font-semibold">About:</span> {ticketData.about}
-          </p>
-        </div>
-
-        {/* Barcode */}
-        <div className="mt-6 text-center">
+        <div className="pt-6 border-t border-dashed border-[#004444]">
           <div className="flex justify-center">
             <svg width="200" height="50">
-              {/* Placeholder for barcode - replace with a real barcode generator */}
-              <text x="10" y="30" fontSize="20" fill="black">
-                {barcode}
+              <rect x="0" y="0" width="200" height="50" fill="none" />
+              <text x="10" y="30" fill="white" fontSize="16">
+                234567 890126
               </text>
             </svg>
           </div>
-          <p className="text-xs text-gray-400">234567 890126</p>
         </div>
       </div>
 
-      <button
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 flex items-center space-x-2"
-        onClick={downloadTicket}
-      >
-        <Download className="h-5 w-5" />
-        <span>Download Ticket</span>
-      </button>
+      <div className="flex justify-between gap-4">
+        <button className="flex-1 px-8 py-3 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]">
+          Book Another Ticket
+        </button>
+        <button
+          onClick={downloadTicket}
+          className="flex-1 px-8 py-3 rounded-lg bg-[#00cccc] text-black font-medium hover:bg-[#00dddd] flex items-center justify-center gap-2"
+        >
+          <Download className="w-5 h-5" />
+          Download Ticket
+        </button>
+      </div>
     </div>
   );
 };

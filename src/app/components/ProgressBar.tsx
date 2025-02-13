@@ -1,8 +1,7 @@
-// components/ProgressBar.tsx
-import React from "react";
+import type React from "react";
 
 interface ProgressBarProps {
-  step: number; // Current step (1, 2, or 3)
+  step: number;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ step }) => {
@@ -15,18 +14,18 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ step }) => {
   const titles = ["Ticket Selection", "Attendee Details", "Ready"];
 
   return (
-    <>
-      <div className="flex justify-between items-center mb-4 gap-36">
-        <h2 className="">{titles[step - 1]}</h2>
-        <div className="text-sm text-gray-400 text-right">Step {step}/3</div>
+    <div className="w-full max-w-3xl mx-auto mb-6">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-2xl font-light text-white">{titles[step - 1]}</h2>
+        <div className="text-sm text-gray-400">Step {step}/3</div>
       </div>
-      <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+      <div className="h-0.5 w-full bg-[#003333] rounded-full">
         <div
-          className="bg-accent h-2.5 rounded-full transition-all duration-500"
+          className="h-0.5 bg-[#00cccc] rounded-full transition-all duration-500 ease-in-out"
           style={{ width: getWidth() }}
-        ></div>
+        />
       </div>
-    </>
+    </div>
   );
 };
 

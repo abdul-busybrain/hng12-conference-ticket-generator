@@ -1,12 +1,11 @@
-// components/AttendeeDetails.tsx
-import React, { useState } from "react";
-import { Button, Upload, UploadFile, message } from "antd";
-import type {
-  RcFile,
-  UploadProps,
-  UploadChangeParam,
-} from "antd/es/upload/interface";
-import { InboxOutlined } from "@ant-design/icons";
+"use client";
+
+import type React from "react";
+import { useState } from "react";
+import { Upload, message } from "antd";
+import { CloudUploadOutlined } from "@ant-design/icons";
+import type { RcFile, UploadProps } from "antd/es/upload/interface";
+import Image from "next/image";
 
 interface AttendeeDetailsProps {
   onNext: (attendeeData: {
@@ -18,16 +17,12 @@ interface AttendeeDetailsProps {
 }
 
 const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [photo, setPhoto] = useState<string>("");
-  const [about, setAbout] = useState<string>("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [about, setAbout] = useState("");
 
-  const handleNext = () => {
-    onNext({ name, email, photo, about });
-  };
-
-  const beforeUpload = (file: RcFile): boolean => {
+  const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       message.error("You can only upload JPG/PNG file!");
@@ -39,92 +34,93 @@ const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
     return isJpgOrPng && isLt2M;
   };
 
-  const handleChange = (info: UploadChangeParam<UploadFile>): void => {
+  const handleChange: UploadProps["onChange"] = (info) => {
     if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhoto(reader.result as string);
-      };
-      reader.readAsDataURL(info.file.originFileObj as RcFile);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
+      getBase64(info.file.originFileObj as RcFile, (url) => {
+        setPhoto(url);
+      });
     }
   };
 
-  const uploadProps: UploadProps = {
-    name: "file",
-    multiple: false,
-    accept: "image/*",
-    beforeUpload: beforeUpload,
-    onChange: handleChange,
+  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result as string));
+    reader.readAsDataURL(img);
   };
 
   return (
-    <div className="p-4 rounded-lg shadow-md bg-secondary text-text-light">
-      <h2 className="text-lg font-semibold mb-4">Attendee Details</h2>
+    <div className="w-full max-w-3xl mx-auto p-6 bg-[#002626] rounded-2xl">
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-lg text-white mb-2">Upload Profile Photo</h3>
+          <Upload.Dragger
+            name="file"
+            multiple={false}
+            showUploadList={false}
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+            className="bg-[#001a1a] border-[#004444] hover:border-[#00cccc]"
+          >
+            <div className="p-8">
+              {photo ? (
+                <Image
+                  src={photo || "/placeholder.svg"}
+                  alt="Avatar"
+                  className="w-32 h-32 rounded-lg mx-auto"
+                />
+              ) : (
+                <>
+                  <CloudUploadOutlined className="text-4xl text-[#00cccc] mb-4" />
+                  <p className="text-white">Drag & drop or click to upload</p>
+                </>
+              )}
+            </div>
+          </Upload.Dragger>
+        </div>
 
-      {/* Upload Section */}
-      <div className="mb-4">
-        <Upload.Dragger {...uploadProps}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload.
-          </p>
-        </Upload.Dragger>
-      </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-white mb-2">Enter your name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 rounded-lg bg-[#001a1a] border border-[#004444] text-white focus:border-[#00cccc] outline-none"
+            />
+          </div>
 
-      {/* Name Input */}
-      <div className="mb-4">
-        <label htmlFor="name" className="block text-sm font-bold mb-2">
-          Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-800 text-white"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
+          <div>
+            <label className="block text-white mb-2">Enter your email *</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 rounded-lg bg-[#001a1a] border border-[#004444] text-white focus:border-[#00cccc] outline-none"
+            />
+          </div>
 
-      {/* Email Input */}
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-bold mb-2">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-800 text-white"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <div>
+            <label className="block text-white mb-2">About the project</label>
+            <textarea
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              className="w-full p-3 rounded-lg bg-[#001a1a] border border-[#004444] text-white focus:border-[#00cccc] outline-none min-h-[100px]"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-between pt-4">
+          <button className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]">
+            Back
+          </button>
+          <button
+            onClick={() => onNext({ name, email, photo, about })}
+            className="px-8 py-2 rounded-lg bg-[#00cccc] text-black font-medium hover:bg-[#00dddd]"
+          >
+            Get My Free Ticket
+          </button>
+        </div>
       </div>
-      {/* About Input */}
-      <div className="mb-4">
-        <label htmlFor="about" className="block text-sm font-bold mb-2">
-          About the project
-        </label>
-        <textarea
-          id="about"
-          className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-800 text-white"
-          value={about}
-          onChange={(e) => setAbout(e.target.value)}
-        />
-      </div>
-      {/* Next Button */}
-      <Button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        onClick={handleNext}
-      >
-        Get My Free Ticket
-      </Button>
     </div>
   );
 };
