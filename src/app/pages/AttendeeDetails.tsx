@@ -1,6 +1,6 @@
 // components/AttendeeDetails.tsx
 import React, { useState } from "react";
-import { Upload, UploadFile, message } from "antd";
+import { Button, Upload, UploadFile, message } from "antd";
 import type {
   RcFile,
   UploadProps,
@@ -119,12 +119,12 @@ const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
         />
       </div>
       {/* Next Button */}
-      <button
+      <Button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         onClick={handleNext}
       >
         Get My Free Ticket
-      </button>
+      </Button>
     </div>
   );
 };
