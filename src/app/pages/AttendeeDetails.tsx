@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Upload, message } from "antd";
 import { CloudUploadOutlined } from "@ant-design/icons";
 import type { RcFile, UploadProps } from "antd/es/upload/interface";
-import Image from "next/image";
 
 interface AttendeeDetailsProps {
   onNext: (attendeeData: {
@@ -14,9 +13,13 @@ interface AttendeeDetailsProps {
     photo: string;
     about: string;
   }) => void;
+  onBack: () => void;
 }
 
-const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
+const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({
+  onNext,
+  onBack,
+}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photo, setPhoto] = useState("");
@@ -63,7 +66,7 @@ const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
           >
             <div className="p-8">
               {photo ? (
-                <Image
+                <img
                   src={photo || "/placeholder.svg"}
                   alt="Avatar"
                   className="w-32 h-32 rounded-lg mx-auto"
@@ -110,7 +113,10 @@ const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({ onNext }) => {
         </div>
 
         <div className="flex justify-between pt-4">
-          <button className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]">
+          <button
+            onClick={onBack}
+            className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]"
+          >
             Back
           </button>
           <button

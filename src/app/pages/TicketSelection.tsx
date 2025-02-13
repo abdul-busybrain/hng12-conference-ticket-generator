@@ -26,6 +26,11 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
     { id: "vvip", name: "VVIP ACCESS", price: 150, remaining: 20 },
   ];
 
+  const handleCancel = () => {
+    setSelectedTicket("");
+    setQuantity(1);
+  };
+
   return (
     <div className="w-full max-w-3xl mx-auto p-6 bg-[#002626] rounded-2xl">
       <div className="bg-[#001a1a] rounded-xl p-8 text-center mb-8">
@@ -87,7 +92,10 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
         </div>
 
         <div className="flex justify-between pt-4">
-          <button className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]">
+          <button
+            onClick={handleCancel}
+            className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]"
+          >
             Cancel
           </button>
           <button

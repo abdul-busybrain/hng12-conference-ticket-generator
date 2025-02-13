@@ -18,9 +18,13 @@ interface TicketData {
 
 interface TicketReadyProps {
   ticketData: TicketData;
+  onBookAnother: () => void;
 }
 
-const TicketReady: React.FC<TicketReadyProps> = ({ ticketData }) => {
+const TicketReady: React.FC<TicketReadyProps> = ({
+  ticketData,
+  onBookAnother,
+}) => {
   const ticketRef = useRef<HTMLDivElement>(null);
 
   const downloadTicket = async () => {
@@ -104,7 +108,10 @@ const TicketReady: React.FC<TicketReadyProps> = ({ ticketData }) => {
       </div>
 
       <div className="flex justify-between gap-4">
-        <button className="flex-1 px-8 py-3 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]">
+        <button
+          onClick={onBookAnother}
+          className="flex-1 px-8 py-3 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]"
+        >
           Book Another Ticket
         </button>
         <button

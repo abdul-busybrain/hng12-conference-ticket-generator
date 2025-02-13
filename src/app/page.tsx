@@ -29,13 +29,34 @@ export default function Home() {
     setStep(3);
   };
 
+  const handleBack = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
+
+  const handleBookAnother = () => {
+    setStep(1);
+    setTicketType("");
+    setQuantity(1);
+    setAttendeeData({
+      name: "",
+      email: "",
+      photo: "",
+      about: "",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[#001a1a]">
       <Header />
       <main className="container mx-auto px-4 py-8">
         <ProgressBar step={step} />
         {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
-        {step === 2 && <AttendeeDetails onNext={handleAttendeeDetailsNext} />}
+        {step === 2 && (
+          <AttendeeDetails
+            onNext={handleAttendeeDetailsNext}
+            onBack={handleBack}
+          />
+        )}
         {step === 3 && (
           <TicketReady
             ticketData={{
@@ -43,6 +64,7 @@ export default function Home() {
               quantity,
               ...attendeeData,
             }}
+            onBookAnother={handleBookAnother}
           />
         )}
       </main>
