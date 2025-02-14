@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Upload, message } from "antd";
 import { CloudUploadOutlined } from "@ant-design/icons";
 import type { RcFile, UploadProps } from "antd/es/upload/interface";
-import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 
 interface AttendeeDetailsProps {
   onNext: (attendeeData: {
@@ -67,9 +67,12 @@ const AttendeeDetails: React.FC<AttendeeDetailsProps> = ({
           >
             <div className="p-8">
               {photo ? (
-                <Image
+                <CldImage
                   src={photo || "/placeholder.svg"}
                   alt="Avatar"
+                  width={100}
+                  height={100}
+                  crop={{ type: "auto", source: true }}
                   className="w-32 h-32 rounded-lg mx-auto"
                 />
               ) : (

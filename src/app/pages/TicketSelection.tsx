@@ -65,16 +65,14 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <h4 className="text-white font-medium">{ticket.name}</h4>
-                  <p className="text-sm text-[#00cccc]">
-                    {ticket.remaining} left!
-                  </p>
+                  <strong className="text-white">
+                    {typeof ticket.price === "number"
+                      ? `$${ticket.price}`
+                      : ticket.price}
+                  </strong>
+                  <h2 className="text-white font-bold">{ticket.name}</h2>
+                  <p>{ticket.remaining}/52</p>
                 </div>
-                <span className="text-white">
-                  {typeof ticket.price === "number"
-                    ? `$${ticket.price}`
-                    : ticket.price}
-                </span>
               </div>
             </div>
           ))}
