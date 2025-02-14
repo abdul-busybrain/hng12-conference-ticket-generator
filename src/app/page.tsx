@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#001a1a]">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 border border-[#197686] rounded-2xl">
         <ProgressBar step={step} />
         {step === 1 && <TicketSelection onNext={handleTicketSelectionNext} />}
         {step === 2 && (

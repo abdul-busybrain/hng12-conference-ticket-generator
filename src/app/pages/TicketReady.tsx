@@ -50,10 +50,10 @@ const TicketReady: React.FC<TicketReadyProps> = ({
     <div className="bg-[#002626] p-8 rounded-lg shadow-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-white mb-2">
-          Your Ticket is Ready!
+          Your Ticket is Booked!
         </h2>
         <p className="text-gray-400 text-lg">
-          Please review your details below
+          Check your email for a copy or you can <strong>download</strong>
         </p>
       </div>
 
@@ -107,7 +107,7 @@ const TicketReady: React.FC<TicketReadyProps> = ({
         </div>
       </div>
 
-      <div className="flex justify-between gap-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:justify-between pt-4">
         <button
           onClick={onBookAnother}
           className="flex-1 px-8 py-3 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]"

@@ -32,8 +32,8 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-6 bg-[#002626] rounded-2xl">
-      <div className="bg-[#001a1a] rounded-xl p-8 text-center mb-8">
+    <div className="w-full lg:max-w-3xl mx-auto lg:p-6">
+      <div className="bg-[#001a1a] p-8 text-center mb-8 border border-[#197686] rounded-2xl">
         <h1 className="text-4xl font-bold text-white mb-4">
           Techember Fest &quot;25
         </h1>
@@ -48,9 +48,11 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
         </div>
       </div>
 
+      <div className="w-full h-[1px] my-16 bg-[#197686]"></div>
+
       <div className="space-y-6">
         <h3 className="text-white text-lg">Select Ticket Type:</h3>
-        <div className="grid gap-4 grid-cols-2">
+        <div className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-3">
           {ticketTypes.map((ticket) => (
             <div
               key={ticket.id}
@@ -68,7 +70,7 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
                     {ticket.remaining} left!
                   </p>
                 </div>
-                <span className="text-xl font-bold text-white">
+                <span className="text-white">
                   {typeof ticket.price === "number"
                     ? `$${ticket.price}`
                     : ticket.price}
@@ -77,7 +79,6 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
             </div>
           ))}
         </div>
-
         <div className="space-y-2">
           <h3 className="text-white text-lg">Number of Tickets</h3>
           <Select
@@ -91,7 +92,7 @@ const TicketSelection: React.FC<TicketSelectionProps> = ({ onNext }) => {
           />
         </div>
 
-        <div className="flex justify-between pt-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:justify-between pt-4">
           <button
             onClick={handleCancel}
             className="px-8 py-2 rounded-lg border border-[#004444] text-gray-300 hover:bg-[#002626]"

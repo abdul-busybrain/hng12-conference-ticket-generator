@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${roadRage.variable}`}>
-      <body className={`px-24 pt-4`}>{children}</body>
+      <body className={`lg:px-24 px-7 pt-2 lg:pt-4`}>{children}</body>
     </html>
   );
 }
