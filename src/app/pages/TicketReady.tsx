@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Download } from "lucide-react";
-import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 import html2canvas from "html2canvas";
-import type React from "react"; // Added import for React
 
 interface TicketData {
   ticketType: string;
@@ -26,13 +25,20 @@ const TicketReady: React.FC<TicketReadyProps> = ({
   onBookAnother,
 }) => {
   const ticketRef = useRef<HTMLDivElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const downloadTicket = async () => {
     if (!ticketRef.current) return;
 
+    setIsDownloading(true);
+
     try {
       const canvas = await html2canvas(ticketRef.current, {
         useCORS: true,
+        scale: 2, // Increase resolution
+        logging: false, // Disable logging
+        allowTaint: true, // Allow cross-origin images
+        backgroundColor: "#002626", // Match background color
       });
       const dataURL = canvas.toDataURL("image/png");
       const link = document.createElement("a");
@@ -43,6 +49,8 @@ const TicketReady: React.FC<TicketReadyProps> = ({
       document.body.removeChild(link);
     } catch (error) {
       console.error("Error generating ticket:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -57,15 +65,16 @@ const TicketReady: React.FC<TicketReadyProps> = ({
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div ref={ticketRef} className="space-y-6 bg-[#001a1a] p-6 rounded-lg">
         {(ticketData.image || ticketData.photo) && (
-          <div>
-            <Image
-              src={ticketData.image || ticketData.photo || "/placeholder.svg"}
+          <div className="flex justify-center">
+            <CldImage
+              src={ticketData.image || ticketData.photo}
               alt="Attendee"
               width={96}
               height={96}
-              className="w-24 h-24 rounded-lg mx-auto border-2 border-[#00cccc] object-cover"
+              crop="fill"
+              className="rounded-lg border-2 border-[#00cccc] object-cover"
             />
           </div>
         )}
@@ -73,11 +82,11 @@ const TicketReady: React.FC<TicketReadyProps> = ({
         <div className="space-y-2 text-left mb-6">
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <p className="text-gray-400 text-sm">Enter your name</p>
+              <p className="text-gray-400 text-sm">Name</p>
               <p className="text-white">{ticketData.name}</p>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">Enter your email *</p>
+              <p className="text-gray-400 text-sm">Email</p>
               <p className="text-white">{ticketData.email}</p>
             </div>
           </div>
@@ -86,11 +95,11 @@ const TicketReady: React.FC<TicketReadyProps> = ({
             <p className="text-white">{ticketData.ticketType}</p>
           </div>
           <div>
-            <p className="text-gray-400 text-sm">Ticket for</p>
+            <p className="text-gray-400 text-sm">Quantity</p>
             <p className="text-white">{ticketData.quantity}</p>
           </div>
           <div>
-            <p className="text-gray-400 text-sm">Special request?</p>
+            <p className="text-gray-400 text-sm">Special request</p>
             <p className="text-white">{ticketData.about || "None"}</p>
           </div>
         </div>
@@ -116,10 +125,17 @@ const TicketReady: React.FC<TicketReadyProps> = ({
         </button>
         <button
           onClick={downloadTicket}
-          className="flex-1 px-8 py-3 rounded-lg bg-[#00cccc] text-black font-medium hover:bg-[#00dddd] flex items-center justify-center gap-2"
+          disabled={isDownloading}
+          className="flex-1 px-8 py-3 rounded-lg bg-[#00cccc] text-black font-medium hover:bg-[#00dddd] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          <Download className="w-5 h-5" />
-          Download Ticket
+          {isDownloading ? (
+            "Generating..."
+          ) : (
+            <>
+              <Download className="w-5 h-5" />
+              Download Ticket
+            </>
+          )}
         </button>
       </div>
     </div>
